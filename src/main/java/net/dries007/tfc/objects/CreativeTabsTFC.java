@@ -32,6 +32,8 @@ public final class CreativeTabsTFC
     public static final CreativeTabs CT_FOOD = new TFCCreativeTab("food", "tfc:food/green_apple");
     public static final CreativeTabs CT_MISC = new TFCCreativeTab("misc", "tfc:wand");
     public static final CreativeTabs CT_FLORA = new TFCCreativeTab("flora", "tfc:plants/goldenrod");
+	
+    public static final CreativeTabs CT_DISCS = new TFCCreativeTab("discs", "minecraft:sand");
 
     private static class TFCCreativeTab extends CreativeTabs
     {

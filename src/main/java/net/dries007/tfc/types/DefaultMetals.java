@@ -55,6 +55,11 @@ public final class DefaultMetals
     public static final ResourceLocation HIGH_CARBON_BLUE_STEEL = new ResourceLocation(MOD_ID, "high_carbon_blue_steel");
     public static final ResourceLocation HIGH_CARBON_RED_STEEL = new ResourceLocation(MOD_ID, "high_carbon_red_steel");
     public static final ResourceLocation HIGH_CARBON_BLACK_STEEL = new ResourceLocation(MOD_ID, "high_carbon_black_steel");
+	
+    public static final ResourceLocation ARDITE = new ResourceLocation(MOD_ID, "ardite");
+    public static final ResourceLocation COBALT = new ResourceLocation(MOD_ID, "cobalt");
+    public static final ResourceLocation MANYULLYN = new ResourceLocation(MOD_ID, "manyullyn");
+	
     public static final ResourceLocation UNKNOWN = new ResourceLocation(MOD_ID, "unknown");
 
     /*
@@ -95,6 +100,8 @@ public final class DefaultMetals
     public static final ResourceLocation BORAX = new ResourceLocation(MOD_ID, "borax");
     public static final ResourceLocation OLIVINE = new ResourceLocation(MOD_ID, "olivine");
     public static final ResourceLocation LAPIS_LAZULI = new ResourceLocation(MOD_ID, "lapis_lazuli");
+    public static final ResourceLocation NATIVE_ARDITE = new ResourceLocation(MOD_ID, "native_ardite");
+    public static final ResourceLocation NATIVE_COBALT = new ResourceLocation(MOD_ID, "native_cobalt");
 
     @SubscribeEvent
     public static void onPreRegisterOre(TFCRegistryEvent.RegisterPreBlock<Ore> event)
@@ -134,7 +141,9 @@ public final class DefaultMetals
             new Ore(SYLVITE),
             new Ore(BORAX),
             new Ore(OLIVINE),
-            new Ore(LAPIS_LAZULI)
+            new Ore(LAPIS_LAZULI),
+            new Ore(NATIVE_ARDITE, ARDITE, false),
+            new Ore(NATIVE_COBALT, COBALT, false)
         );
     }
 
@@ -142,6 +151,9 @@ public final class DefaultMetals
     public static void onPreRegisterMetal(TFCRegistryEvent.RegisterPreBlock<Metal> event)
     {
         event.getRegistry().registerAll(
+            new Metal(ARDITE, TIER_I, true, 0.14f, 270, 0xFF486B72, null, null),
+            new Metal(COBALT, TIER_I, true, 0.14f, 270, 0xFF486B72, null, null),
+            new Metal(MANYULLYN, TIER_I, true, 0.14f, 270, 0xFF486B72, null, null),
             new Metal(BISMUTH, TIER_I, true, 0.14f, 270, 0xFF486B72, null, null),
             new Metal(BISMUTH_BRONZE, TIER_II, true, 0.35f, 985, 0xFF418E4F, ToolMaterialsTFC.BISMUTH_BRONZE, ArmorMaterialTFC.BISMUTH_BRONZE),
             new Metal(BLACK_BRONZE, TIER_II, true, 0.35f, 1070, 0xFF3B2636, ToolMaterialsTFC.BLACK_BRONZE, ArmorMaterialTFC.BLACK_BRONZE),
@@ -186,7 +198,8 @@ public final class DefaultMetals
             new AlloyRecipe.Builder(STERLING_SILVER).add(COPPER, 0.2, 0.4).add(SILVER, 0.6, 0.8).build(),
             new AlloyRecipe.Builder(WEAK_STEEL).add(STEEL, 0.5, 0.7).add(NICKEL, 0.15, 0.25).add(BLACK_BRONZE, 0.15, 0.25).build(),
             new AlloyRecipe.Builder(WEAK_BLUE_STEEL).add(BLACK_STEEL, 0.5, 0.55).add(STEEL, 0.2, 0.25).add(BISMUTH_BRONZE, 0.1, 0.15).add(STERLING_SILVER, 0.1, 0.15).build(),
-            new AlloyRecipe.Builder(WEAK_RED_STEEL).add(BLACK_STEEL, 0.5, 0.55).add(STEEL, 0.2, 0.25).add(BRASS, 0.1, 0.15).add(ROSE_GOLD, 0.1, 0.15).build()
+            new AlloyRecipe.Builder(WEAK_RED_STEEL).add(BLACK_STEEL, 0.5, 0.55).add(STEEL, 0.2, 0.25).add(BRASS, 0.1, 0.15).add(ROSE_GOLD, 0.1, 0.15).build(),
+            new AlloyRecipe.Builder(MANYULLYN).add(ARDITE, 0.88, 0.92).add(COBALT, 0.08, 0.12).build()
         );
     }
 }

@@ -46,10 +46,28 @@ import net.dries007.tfc.objects.items.metal.ItemSmallOre;
 import net.dries007.tfc.objects.items.rock.ItemBrickTFC;
 import net.dries007.tfc.objects.items.rock.ItemRock;
 import net.dries007.tfc.objects.items.rock.ItemRockToolHead;
+
+import net.dries007.tfc.objects.items.wood.ItemBoardTFC;
 import net.dries007.tfc.objects.items.wood.ItemBoatTFC;
+import net.dries007.tfc.objects.items.wood.ItemBranchTFC;
 import net.dries007.tfc.objects.items.wood.ItemDoorTFC;
+import net.dries007.tfc.objects.items.wood.ItemHaftTFC;
 import net.dries007.tfc.objects.items.wood.ItemLumberTFC;
+import net.dries007.tfc.objects.items.wood.ItemPlanedBoardTFC;
+import net.dries007.tfc.objects.items.wood.ItemPlanedLumberTFC;
+import net.dries007.tfc.objects.items.wood.ItemPlanedPlankTFC;
+import net.dries007.tfc.objects.items.wood.ItemPlankTFC;
+import net.dries007.tfc.objects.items.wood.ItemSawdustTFC;
+import net.dries007.tfc.objects.items.wood.ItemShaftTFC;
+import net.dries007.tfc.objects.items.wood.ItemStickTFC;
+import net.dries007.tfc.objects.items.wood.ItemTwigTFC;
+import net.dries007.tfc.objects.items.wood.ItemWoodChippingsTFC;
+import net.dries007.tfc.objects.items.wood.ItemWoodPulpTFC;
+
 import net.dries007.tfc.objects.items.wood.ItemWoodenBucket;
+import net.dries007.tfc.objects.items.wood.ItemLacqueredWoodenBucket;
+import net.dries007.tfc.objects.items.wood.ItemTreatedWoodenBucket;
+
 import net.dries007.tfc.util.OreDictionaryHelper;
 import net.dries007.tfc.util.agriculture.Crop;
 import net.dries007.tfc.util.agriculture.Food;
@@ -134,12 +152,24 @@ public final class ItemsTFC
     @GameRegistry.ObjectHolder("quiver")
     public static final ItemQuiver QUIVER = getNull();
 
+
     public static final ItemWoodenBucket WOODEN_BUCKET = getNull();
+    public static final ItemLacqueredWoodenBucket LACQUERED_WOODEN_BUCKET = getNull();
+    public static final ItemTreatedWoodenBucket TREATED_WOODEN_BUCKET = getNull();
+
 
     @GameRegistry.ObjectHolder("metal/bucket/blue_steel")
     public static final ItemMetalBucket BLUE_STEEL_BUCKET = getNull();
     @GameRegistry.ObjectHolder("metal/bucket/red_steel")
     public static final ItemMetalBucket RED_STEEL_BUCKET = getNull();
+	
+    @GameRegistry.ObjectHolder("metal/bucket/ardite")
+    public static final ItemMetalBucket ARDITE_BUCKET = getNull();
+    @GameRegistry.ObjectHolder("metal/bucket/cobalt")
+    public static final ItemMetalBucket COBALT_BUCKET = getNull();
+    @GameRegistry.ObjectHolder("metal/bucket/manyullyn")
+    public static final ItemMetalBucket MANYULLYN_BUCKET = getNull();
+
 
     @GameRegistry.ObjectHolder("dye/black")
     public static final ItemMisc DYE_BLACK = getNull();
@@ -203,9 +233,17 @@ public final class ItemsTFC
         simpleItems.add(register(r, "wand", new ItemDebug(), CT_MISC));
         simpleItems.add(register(r, "mortar", new ItemMisc(Size.TINY, Weight.VERY_LIGHT, "mortar"), CT_MISC));
         simpleItems.add(register(r, "halter", new ItemMisc(Size.SMALL, Weight.LIGHT, "halter"), CT_MISC));
+		
         register(r, "wooden_bucket", new ItemWoodenBucket(), CT_WOOD); //not a simple item, use a custom model
+        register(r, "lacqured_wooden_bucket", new ItemLacqueredWoodenBucket(), CT_WOOD); //not a simple item, use a custom model
+        register(r, "treated_wooden_bucket", new ItemTreatedWoodenBucket(), CT_WOOD); //not a simple item, use a custom model
+		
         register(r, "metal/bucket/blue_steel", new ItemMetalBucket(Metal.BLUE_STEEL, Metal.ItemType.BUCKET), CT_METAL); //not a simple item, use a custom model
         register(r, "metal/bucket/red_steel", new ItemMetalBucket(Metal.RED_STEEL, Metal.ItemType.BUCKET), CT_METAL); //not a simple item, use a custom model
+
+        register(r, "metal/bucket/ardite", new ItemMetalBucket(Metal.ARDITE, Metal.ItemType.BUCKET), CT_METAL); //not a simple item, use a custom model
+        register(r, "metal/bucket/cobalt", new ItemMetalBucket(Metal.COBALT, Metal.ItemType.BUCKET), CT_METAL); //not a simple item, use a custom model
+        register(r, "metal/bucket/manyullyn", new ItemMetalBucket(Metal.MANYULLYN, Metal.ItemType.BUCKET), CT_METAL); //not a simple item, use a custom model
 
         {
             for (Rock rock : TFCRegistries.ROCKS.getValuesCollection())
@@ -261,8 +299,20 @@ public final class ItemsTFC
 
         for (Tree wood : TFCRegistries.TREES.getValuesCollection())
         {
-            simpleItems.add(register(r, "wood/lumber/" + wood.getRegistryName().getPath(), new ItemLumberTFC(wood), CT_WOOD));
+            simpleItems.add(register(r, "wood/board/" + wood.getRegistryName().getPath(), new ItemBoardTFC(wood), CT_WOOD));
             simpleItems.add(register(r, "wood/boat/" + wood.getRegistryName().getPath(), new ItemBoatTFC(wood), CT_WOOD));
+            simpleItems.add(register(r, "wood/branch/" + wood.getRegistryName().getPath(), new ItemBranchTFC(wood), CT_WOOD));
+            simpleItems.add(register(r, "wood/haft/" + wood.getRegistryName().getPath(), new ItemHaftTFC(wood), CT_WOOD));
+            simpleItems.add(register(r, "wood/lumber/" + wood.getRegistryName().getPath(), new ItemLumberTFC(wood), CT_WOOD));
+            simpleItems.add(register(r, "wood/planed_board/" + wood.getRegistryName().getPath(), new ItemPlanedBoardTFC(wood), CT_WOOD));
+            simpleItems.add(register(r, "wood/planed_lumber/" + wood.getRegistryName().getPath(), new ItemPlanedLumberTFC(wood), CT_WOOD));
+            simpleItems.add(register(r, "wood/plank/" + wood.getRegistryName().getPath(), new ItemPlankTFC(wood), CT_WOOD));
+            simpleItems.add(register(r, "wood/sawdust/" + wood.getRegistryName().getPath(), new ItemSawdustTFC(wood), CT_WOOD));
+            simpleItems.add(register(r, "wood/shaft/" + wood.getRegistryName().getPath(), new ItemShaftTFC(wood), CT_WOOD));
+            simpleItems.add(register(r, "wood/stick/" + wood.getRegistryName().getPath(), new ItemStickTFC(wood), CT_WOOD));
+            simpleItems.add(register(r, "wood/twig/" + wood.getRegistryName().getPath(), new ItemTwigTFC(wood), CT_WOOD));
+            simpleItems.add(register(r, "wood/wood_chippings/" + wood.getRegistryName().getPath(), new ItemWoodChippingsTFC(wood), CT_WOOD));
+            simpleItems.add(register(r, "wood/wood_pulp/" + wood.getRegistryName().getPath(), new ItemWoodPulpTFC(wood), CT_WOOD));
         }
 
         simpleItems.add(register(r, "stick_bunch", new ItemMisc(Size.NORMAL, Weight.LIGHT), CT_WOOD));

@@ -45,6 +45,12 @@ public class Metal extends IForgeRegistryEntry.Impl<Metal>
     public static final Metal BLUE_STEEL = Helpers.getNull();
     @GameRegistry.ObjectHolder("tfc:red_steel")
     public static final Metal RED_STEEL = Helpers.getNull();
+    @GameRegistry.ObjectHolder("tfc:ardite")
+    public static final Metal ARDITE = Helpers.getNull();
+    @GameRegistry.ObjectHolder("tfc:cobalt")
+    public static final Metal COBALT = Helpers.getNull();
+    @GameRegistry.ObjectHolder("tfc:manyullyn")
+    public static final Metal MANYULLYN = Helpers.getNull();
 
     private final Tier tier;
     private final float specificHeat;

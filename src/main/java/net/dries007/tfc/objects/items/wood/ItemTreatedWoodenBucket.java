@@ -3,10 +3,8 @@
  * See the project README.md and LICENSE.txt for more information.
  */
 
-package net.dries007.tfc.objects.items.metal;
+package net.dries007.tfc.objects.items.wood;
 
-import java.util.HashSet;
-import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -34,34 +32,54 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.dries007.tfc.ConfigTFC;
-import net.dries007.tfc.api.types.Metal;
+import net.dries007.tfc.api.capability.size.Size;
+import net.dries007.tfc.api.capability.size.Weight;
 import net.dries007.tfc.objects.fluids.capability.FluidWhitelistHandler;
+import net.dries007.tfc.objects.items.ItemTFC;
 
-import static net.dries007.tfc.api.types.Metal.BLUE_STEEL;
-import static net.dries007.tfc.api.types.Metal.RED_STEEL;
-import static net.dries007.tfc.api.types.Metal.ARDITE;
-import static net.dries007.tfc.api.types.Metal.COBALT;
-import static net.dries007.tfc.api.types.Metal.MANYULLYN;
+import static net.minecraftforge.fluids.BlockFluidBase.LEVEL;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class ItemMetalBucket extends ItemMetal // quite a bit copied out of ItemWoodenBucket
+public class ItemTreatedWoodenBucket extends ItemTFC
 {
     private static final int CAPACITY = Fluid.BUCKET_VOLUME;
 
-    public ItemMetalBucket(Metal metal, Metal.ItemType type)
+    public ItemTreatedWoodenBucket()
     {
-        super(metal, type);
         setHasSubtypes(true);
         setContainerItem(this);
 
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DispenseFluidContainer.getInstance());
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @Nonnull
+    @Override
+    public Size getSize(@Nonnull ItemStack stack)
+    {
+        return Size.LARGE; // Can be stored in chests
+    }
+
+    @Nonnull
+    @Override
+    public Weight getWeight(@Nonnull ItemStack stack)
+    {
+        return Weight.MEDIUM; // Stacksize 16
+    }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, @Nullable EntityPlayer playerIn, EnumHand handIn)
+    public boolean canStack(@Nonnull ItemStack stack)
+    {
+        IFluidHandler bucketCap = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+        if (bucketCap != null)
+        {
+            return bucketCap.drain(CAPACITY, false) == null;
+        }
+        return true;
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
         ItemStack stack = playerIn.getHeldItem(handIn);
         if (!worldIn.isRemote && !stack.isEmpty())
@@ -95,7 +113,7 @@ public class ItemMetalBucket extends ItemMetal // quite a bit copied out of Item
                 }
                 else
                 {
-                    //Filled bucket, try to empty it.
+                    //Filled bucket, try to empty it. Place a flowing water block (not a source block!)
                     IBlockState stateAt = worldIn.getBlockState(pos);
                     if (!(stateAt.getBlock().isReplaceable(worldIn, pos) || !stateAt.getMaterial().isSolid()))
                     {
@@ -117,7 +135,7 @@ public class ItemMetalBucket extends ItemMetal // quite a bit copied out of Item
                             // Place a flowing water block, not a source
                             if (fluid.getBlock() instanceof BlockFluidBase)
                             {
-                                worldIn.setBlockState(pos, fluid.getBlock().getDefaultState());
+                                worldIn.setBlockState(pos, fluid.getBlock().getDefaultState().withProperty(LEVEL, 1));
                             }
                             else if (fluid.getBlock() instanceof BlockLiquid)
                             {
@@ -125,7 +143,7 @@ public class ItemMetalBucket extends ItemMetal // quite a bit copied out of Item
                                 try
                                 {
                                     BlockLiquid flowingBlock = BlockStaticLiquid.getFlowingBlock(fluid.getBlock().getDefaultState().getMaterial());
-                                    worldIn.setBlockState(pos, flowingBlock.getDefaultState());
+                                    worldIn.setBlockState(pos, flowingBlock.getDefaultState().withProperty(BlockLiquid.LEVEL, 1));
                                 }
                                 catch (IllegalArgumentException e) { /* Just skip */ }
                             }
@@ -162,56 +180,26 @@ public class ItemMetalBucket extends ItemMetal // quite a bit copied out of Item
         if (isInCreativeTab(tab))
         {
             items.add(new ItemStack(this));
-            for (Fluid fluid : getValidFluids())
+            for (String fluidName : ConfigTFC.General.MISC.treatedWoodenBucketWhitelist)
             {
-                ItemStack stack = new ItemStack(this);
-                IFluidHandlerItem cap = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
-                if (cap != null)
+                Fluid fluid = FluidRegistry.getFluid(fluidName);
+                if (fluid != null)
                 {
-                    cap.fill(new FluidStack(fluid, CAPACITY), true);
+                    ItemStack stack = new ItemStack(this);
+                    IFluidHandlerItem cap = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+                    if (cap != null)
+                    {
+                        cap.fill(new FluidStack(fluid, CAPACITY), true);
+                    }
+                    items.add(stack);
                 }
-                items.add(stack);
             }
         }
-    }
-
-    public Set<Fluid> getValidFluids()
-    {
-        String[] fluidNames = {};
-
-        if (metal.equals(BLUE_STEEL))
-        {
-            fluidNames = ConfigTFC.General.MISC.blueSteelBucketWhitelist;
-        }
-        else if (metal.equals(RED_STEEL))
-        {
-            fluidNames = ConfigTFC.General.MISC.redSteelBucketWhitelist;
-        }
-        else if (metal.equals(ARDITE))
-        {
-            fluidNames = ConfigTFC.General.MISC.arditeBucketWhitelist;
-        }
-        else if (metal.equals(COBALT))
-        {
-            fluidNames = ConfigTFC.General.MISC.cobaltBucketWhitelist;
-        }
-        else if (metal.equals(MANYULLYN))
-        {
-            fluidNames = ConfigTFC.General.MISC.manyullynBucketWhitelist;
-        }
-		// No other metal buckets implemented
-
-        Set<Fluid> validFluids = new HashSet<>();
-        for (String fluidName : fluidNames)
-        {
-            validFluids.add(FluidRegistry.getFluid(fluidName));
-        }
-        return validFluids;
     }
 
     @Override
     public ICapabilityProvider initCapabilities(@Nonnull ItemStack stack, @Nullable NBTTagCompound nbt)
     {
-        return new FluidWhitelistHandler(stack, CAPACITY, getValidFluids());
+        return new FluidWhitelistHandler(stack, CAPACITY, ConfigTFC.General.MISC.treatedWoodenBucketWhitelist);
     }
 }
